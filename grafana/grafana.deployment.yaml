@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+  namespace: grafana
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      volumes:
+      - name: datasources-configmap
+        configMap:
+          name: grafana-datasources
+      - name: storage
+        persistentVolumeClaim:
+            claimName: grafana-storage
+      initContainers:
+      - name: fix-storage-permissions
+        image: busybox:1.28
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 0
+        command: ["chown", "-R", "472:472", "/var/lib/grafana"]
+        volumeMounts:
+        - name: storage
+          mountPath: /var/lib/grafana
+      containers:
+      - image: grafana/grafana
+        imagePullPolicy: Always
+        name: grafana
+        resources: {}
+        volumeMounts:
+        - name: datasources-configmap
+          mountPath: /etc/grafana/provisioning/datasources/datasources.yaml
+          subPath: datasources.yaml
+        - name: storage
+          mountPath: /var/lib/grafana

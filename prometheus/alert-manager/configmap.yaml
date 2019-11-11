@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-conf
+  namespace: prometheus
+data:
+  alertmanager.yml: |
+    route:
+      receiver: slack_receiver
+    receivers:
+    - name: slack_receiver
+      slack_configs:
+      - send_resolved: true
+        username: 'amrit '
+        api_url: 'https://hooks.slack.com/services/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'
+        channel: '#alerts'
