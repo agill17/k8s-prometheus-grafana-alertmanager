@@ -11,6 +11,6 @@ data:
     - name: slack_receiver
       slack_configs:
       - send_resolved: true
-        username: 'amrit '
-        api_url: 'https://hooks.slack.com/services/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'
+        username: 'amrit'
+        api_url: 'slack-incoming-webhook-url-goes-here'
         channel: '#alerts'
